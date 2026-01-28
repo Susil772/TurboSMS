@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetGuard Verify</title>
+    <style>
+        body { background-color: #0f172a; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: #1e293b; padding: 30px; border-radius: 15px; box-shadow: 0 0 20px rgba(0,0,0,0.5); text-align: center; width: 320px; border: 1px solid #334155; }
+        h2 { color: #38bdf8; margin-bottom: 20px; }
+        input { width: 90%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; outline: none; text-align: center; font-size: 16px; }
+        button { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; background: #38bdf8; color: #0f172a; font-weight: bold; cursor: pointer; font-size: 16px; }
+        #status { margin-top: 15px; font-size: 14px; min-height: 20px; }
+        .success { color: #4ade80; }
+        .error { color: #f87171; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🔒 NetGuard System</h2>
+        <input type="text" id="phone" placeholder="Example: 017xxxxxxxx">
+        <button onclick="sendSMS()" id="btn">Send Code 🔥</button>
+        <p id="status"></p>
+    </div>
+
+    <script>
+        async function sendSMS() {
+            let phone = document.getElementById("phone").value;
+            let status = document.getElementById("status");
+            let btn = document.getElementById("btn");
+
+            if(phone.length < 11) {
+                status.innerText = "❌ সঠিক নাম্বার দিন!";
+                status.className = "error";
+                return;
+            }
+
+            status.innerText = "Processing... ⏳";
+            status.className = "";
+            btn.disabled = true;
+            btn.style.opacity = "0.5";
+
+            try {
+                let response = await fetch('/api/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone: phone })
+                });
+
+                let result = await response.json();
+
+                if (result.success) {
+                    status.innerText = "✅ " + result.message;
+                    status.className = "success";
+                } else {
+                    status.innerText = "❌ " + result.message;
+                    status.className = "error";
+                }
+            } catch (err) {
+                status.innerText = "❌ সার্ভার এরর!";
+                status.className = "error";
+            }
+            btn.disabled = false;
+            btn.style.opacity = "1";
+        }
+    </script>
+</body>
+  </html>
