@@ -3,75 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NetGuard Live</title>
+    <title>NetGuard Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #0f172a; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { background: #1e293b; padding: 30px; border-radius: 15px; box-shadow: 0 0 20px rgba(0,0,0,0.5); text-align: center; width: 320px; border: 1px solid #334155; }
-        h2 { color: #38bdf8; margin-bottom: 20px; }
-        input { width: 90%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; outline: none; text-align: center; font-size: 16px; }
-        button { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; background: #38bdf8; color: #0f172a; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
-        button:hover { background: #0ea5e9; }
-        #status { margin-top: 15px; font-size: 14px; min-height: 20px; }
-        .success { color: #4ade80; }
-        .error { color: #f87171; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f172a; color: white; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        .container { text-align: center; margin-top: 50px; width: 90%; max-width: 400px; }
+        .card { background: #1e293b; padding: 20px; margin: 15px 0; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; border: 1px solid #334155; transition: 0.3s; text-decoration: none; color: white; }
+        .card:hover { transform: scale(1.02); background: #334155; }
+        .sms { border-left: 5px solid #00d2ff; }
+        .mail { border-left: 5px solid #ff9f43; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>🔒 NetGuard Live</h2>
-        <input type="text" id="phone" placeholder="Example: 017xxxxxxxx">
-        <button onclick="sendSMS()" id="btn">Send OTP 🔥</button>
-        <p id="status"></p>
+        <h1>🛡️ NetGuard Tools</h1>
+        <p style="color: #94a3b8; margin-bottom: 40px;">Premium Security Tools</p>
+
+        <a href="login.html" class="card sms">
+            <h3>📩 Custom SMS</h3> <span>🔒 Locked</span>
+        </a>
+        
+        <a href="login.html" class="card mail">
+            <h3>📧 Temp Mail</h3> <span>🔒 Locked</span>
+        </a>
     </div>
-
-    <script>
-        async function sendSMS() {
-            let phone = document.getElementById("phone").value;
-            let status = document.getElementById("status");
-            let btn = document.getElementById("btn");
-
-            // বেসিক ভ্যালিডেশন
-            if(phone.length < 11) {
-                status.innerText = "❌ সঠিক নাম্বার দিন!";
-                status.className = "error";
-                return;
-            }
-
-            status.innerText = "Processing... ⏳";
-            status.className = "";
-            btn.disabled = true;
-            btn.style.opacity = "0.5";
-
-            try {
-                // API তে কল পাঠানো
-                let response = await fetch('/api/send', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone: phone })
-                });
-
-                // যদি 404 বা অন্য এরর আসে
-                if (!response.ok) {
-                    throw new Error(`Server Error: ${response.status}`);
-                }
-
-                let result = await response.json();
-
-                if (result.success) {
-                    status.innerText = "✅ " + result.message;
-                    status.className = "success";
-                } else {
-                    status.innerText = "❌ " + result.message;
-                    status.className = "error";
-                }
-            } catch (err) {
-                console.error(err);
-                status.innerText = "❌ সার্ভার সমস্যা! (" + err.message + ")";
-                status.className = "error";
-            }
-            btn.disabled = false;
-            btn.style.opacity = "1";
-        }
-    </script>
 </body>
-  </html>
+</html>

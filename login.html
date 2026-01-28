@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Required</title>
+    <style>
+        body { background: #0f172a; color: white; font-family: sans-serif; height: 100vh; display: flex; justify-content: center; align-items: center; margin: 0; }
+        .box { background: #1e293b; padding: 30px; border-radius: 15px; width: 300px; text-align: center; border: 1px solid #334155; }
+        input { width: 90%; padding: 12px; margin: 10px 0; background: #0f172a; border: 1px solid #475569; color: white; border-radius: 5px; text-align: center; }
+        button { width: 100%; padding: 12px; margin-top: 10px; background: #38bdf8; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        .contact { display: block; margin-top: 20px; color: #94a3b8; font-size: 13px; text-decoration: none; }
+        .error { color: #f87171; margin-top: 10px; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>🔒 Member Login</h2>
+        <input type="text" id="user" placeholder="Username">
+        <input type="password" id="pass" placeholder="Password">
+        <button onclick="login()" id="btn">Login 🚀</button>
+        <p id="msg" class="error"></p>
+        
+        <a href="https://t.me/YOUR_TELEGRAM_ID" class="contact">Don't have account? Contact Admin</a>
+    </div>
+
+    <script>
+        // লগইন করা থাকলে সোজা ড্যাশবোর্ডে
+        if(localStorage.getItem("token")) window.location.href = "dashboard.html";
+
+        async function login() {
+            let u = document.getElementById("user").value;
+            let p = document.getElementById("pass").value;
+            let msg = document.getElementById("msg");
+            
+            if(!u || !p) { msg.innerText = "Empty fields!"; return; }
+            
+            document.getElementById("btn").disabled = true;
+            msg.innerText = "Checking...";
+
+            try {
+                let res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: u, password: p })
+                });
+                let data = await res.json();
+
+                if(data.success) {
+                    localStorage.setItem("token", data.token);
+                    window.location.href = "dashboard.html";
+                } else {
+                    msg.innerText = "❌ " + data.message;
+                }
+            } catch(e) { msg.innerText = "Server Error"; }
+            
+            document.getElementById("btn").disabled = false;
+        }
+    </script>
+</body>
+</html>
