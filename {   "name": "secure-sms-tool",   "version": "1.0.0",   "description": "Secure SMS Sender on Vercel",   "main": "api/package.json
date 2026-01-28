@@ -1,0 +1,7 @@
+{
+  "name": "secure-sms-tool",
+  "version": "1.0.0",
+  "description": "Secure SMS Sender on Vercel",
+  "main": "api/send.js",
+  "license": "MIT"
+}
