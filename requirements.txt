@@ -1,1 +1,2 @@
-# No external dependencies - only Python standard library
+flask
+requests
